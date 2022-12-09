@@ -1,0 +1,14 @@
+[tool.poetry]
+name = "async"
+version = "0.1.0"
+description = "async sandbox"
+authors = ["kpomak <romka_ne@mail.ru>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "3.9.16"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
