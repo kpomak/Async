@@ -83,21 +83,38 @@ words_to_codec = [
 """ 
 LIMIT_OF_LINES = 5
 
+def ping_hosts(*args) -> None:
+    for host in args:
+        ping_out = subprocess.Popen(args=('ping', host), stdout=subprocess.PIPE)
+        lines = 0
+        for line in ping_out.stdout:
+            lines += 1
+            print(line.decode('utf-8').strip())
+            if lines > LIMIT_OF_LINES:
+                ping_out.terminate()
+
 hosts = [
     'yandex.ru',
     'youtube.com',
 ]
 
-for host in hosts:
-    ping_out = subprocess.Popen(args=('ping', host), stdout=subprocess.PIPE)
-    lines = 0
-    for line in ping_out.stdout:
-        lines += 1
-        print(line.decode('utf-8').strip())
-        if lines > LIMIT_OF_LINES:
-            ping_out.terminate()
+# ping_hosts(*hosts)
 
 """
 6. Создать текстовый файл test_file.txt, заполнить его тремя строками: «сетевое программирование», «сокет», «декоратор».
 Проверить кодировку файла по умолчанию. Принудительно открыть файл в формате Unicode и вывести его содержимое.
 """
+path = 'test_file.txt'
+
+strings = [
+    'сетевоу программирование',
+    'сокет',
+    'декоратор',
+]
+
+with open(path, 'w') as f:
+    for chunk in strings:
+        f.write(chunk + '\n')
+
+with open(path, 'r') as f:
+    print(f'Используемая кодировка: {f.encoding}\n{f.read()}')
