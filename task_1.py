@@ -1,3 +1,5 @@
+import subprocess
+
 """
 1. Каждое из слов «разработка», «сокет», «декоратор» представить в строковом формате и проверить тип и содержание соответствующих переменных.
 Затем с помощью онлайн-конвертера преобразовать строковые представление в формат Unicode и также проверить тип и содержимое переменных.
@@ -74,11 +76,28 @@ words_to_codec = [
     'standart',
 ]
 
-codec(*words_to_codec)
+# codec(*words_to_codec)
 
 """
 5. Выполнить пинг веб-ресурсов yandex.ru, youtube.com и преобразовать результаты из байтовового в строковый тип на кириллице.
+""" 
+LIMIT_OF_LINES = 5
 
+hosts = [
+    'yandex.ru',
+    'youtube.com',
+]
+
+for host in hosts:
+    ping_out = subprocess.Popen(args=('ping', host), stdout=subprocess.PIPE)
+    lines = 0
+    for line in ping_out.stdout:
+        lines += 1
+        print(line.decode('utf-8').strip())
+        if lines > LIMIT_OF_LINES:
+            ping_out.terminate()
+
+"""
 6. Создать текстовый файл test_file.txt, заполнить его тремя строками: «сетевое программирование», «сокет», «декоратор».
 Проверить кодировку файла по умолчанию. Принудительно открыть файл в формате Unicode и вывести его содержимое.
 """
