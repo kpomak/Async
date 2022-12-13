@@ -1,4 +1,5 @@
 import re
+import csv
 
 """
 1. Задание на закрепление знаний по модулю CSV. Написать скрипт, осуществляющий выборку определенных данных из файлов info_1.txt, info_2.txt, info_3.txt
@@ -27,38 +28,39 @@ def get_data(*args):
     os_code_list = []
     os_type_list = []
     main_data = [
-        'Изготовитель системы',
-        'Название ОС',
-        'Код продукта',
-        'Тип системы',
+        [
+            'Изготовитель системы',
+            'Название ОС',
+            'Код продукта',
+            'Тип системы',
+        ],
     ]
 
     for path in args:
         with open(path, encoding='cp1251') as f:
-            data = str(f.readlines())
-            print(data)
-            qew = re.match(r'(Изготовитель системы:)( *)([\S].*)(\n)', data)
-            os_prod_list.append(qew.group(3))
-                
-            # os_name = re.match(r'(Название ОС:)( *)([\S].*)(\n$)', line)
-            # if os_name:      
-            #     os_name_list.append(os_name.group(3))
-            
-            # os_code = re.match(r'(Код продукта:)( *)([\S].*)(\n$)', line)
-            # if os_code:
-            #     os_code_list.append(os_code.group(3))
-            
-            # os_type = re.match(r'(Тип системы:)( *)([\S].*)(\n$)', line)
-            # if os_type:
-            #     os_type_list.append(os_type.group(3))
+            data = f.read()
+            pattern = r'( *)([\S].*)(\n)'
+            os_prod_list.append(re.search(r'(Изготовитель системы:)' + pattern, data).group(3))
+            os_name_list.append(re.search(r'(Название ОС:)' + pattern, data).group(3))
+            os_code_list.append(re.search(r'(Код продукта:)' + pattern, data).group(3))
+            os_type_list.append(re.search(r'(Тип системы:)' + pattern, data).group(3))
     
-    return main_data, os_prod_list, os_name_list, os_code_list, os_type_list
+    for prod, name, code, os_type in zip(os_prod_list, os_name_list, os_code_list, os_type_list):
+        main_data.append([prod, name, code, os_type])
 
-print(get_data(*paths))
+    return main_data
+
+def write_to_csv(*args, path='temp.csv'):
+    with open(path, 'w') as f:
+        csv_f =csv.writer(f)
+        csv_f.writerows(get_data(*args))
+
+
+# write_to_csv(*paths, path='temp.csv')
 
 
 
-
+ 
 
 
 
