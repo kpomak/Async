@@ -1,5 +1,6 @@
 import re
 import csv
+import json
 
 """
 1. Задание на закрепление знаний по модулю CSV. Написать скрипт, осуществляющий выборку определенных данных из файлов info_1.txt, info_2.txt, info_3.txt
@@ -58,12 +59,6 @@ def write_to_csv(*args, path='temp.csv'):
 
 # write_to_csv(*paths, path='temp.csv')
 
-
-
- 
-
-
-
 """    
 2. Задание на закрепление знаний по модулю json. Есть файл orders в формате JSON с информацией о заказах. Написать скрипт, автоматизирующий его
     заполнение данными. Для этого:
@@ -73,6 +68,23 @@ def write_to_csv(*args, path='temp.csv'):
     символа;
     Проверить работу программы через вызов функции write_order_to_json() с передачей в нее значений каждого параметра.
 """
+def write_order_json(item, quantity, price, buyer, date):
+    with open('orders.json', 'r') as f:
+        orders_dict = json.load(f)
+
+        orders_dict['orders'].append({
+            'item': item,
+            'quantity': quantity,
+            'price': price,
+            'buyer': buyer,
+            'date': date,
+        })
+
+    with open('orders.json', 'w') as f:
+        json.dump(orders_dict, f, indent=4)
+
+
+# write_order_json('sour',3,'100$', 'username', '20-12-22')
 
 
 """  
