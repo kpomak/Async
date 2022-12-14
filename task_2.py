@@ -3,6 +3,8 @@ import csv
 import json
 import yaml
 
+from yaml.loader import Loader
+
 """
 1. Задание на закрепление знаний по модулю CSV. Написать скрипт, осуществляющий выборку определенных данных из файлов info_1.txt, info_2.txt, info_3.txt
     и формирующий новый «отчетный» файл в формате CSV. Для этого:
@@ -58,7 +60,7 @@ def write_to_csv(*args, path='temp.csv'):
         csv_f.writerows(get_data(*args))
 
 
-# write_to_csv(*paths, path='temp.csv')
+write_to_csv(*paths, path='temp.csv')
 
 """    
 2. Задание на закрепление знаний по модулю json. Есть файл orders в формате JSON с информацией о заказах. Написать скрипт, автоматизирующий его
@@ -85,7 +87,7 @@ def write_order_json(item, quantity, price, buyer, date):
         json.dump(orders_dict, f, indent=4)
 
 
-# write_order_json('sour',3,'100$', 'username', '20-12-22')
+write_order_json('sour',3,'100$', 'username', '20-12-22')
 
 
 """  
@@ -101,7 +103,7 @@ def write_order_json(item, quantity, price, buyer, date):
 
 def write_to_yaml(some_dict):
     with open('file.yaml', 'w') as f:
-        yaml.dump(some_dict, f, default_flow_style=True, allow_unicode=True)
+        yaml.dump(some_dict, f, default_flow_style=False, allow_unicode=True)
 
 
 prepared_data = {
@@ -114,3 +116,6 @@ prepared_data = {
 }
 
 write_to_yaml(prepared_data)
+
+with open('file.yaml') as f:
+    assert prepared_data == yaml.load(f, Loader)
