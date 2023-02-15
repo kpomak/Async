@@ -1,4 +1,25 @@
 {
     "orders": [
+        {
+            "item": "sour",
+            "quantity": 3,
+            "price": "100$",
+            "buyer": "username",
+            "date": "20-12-22"
+        },
+        {
+            "item": "sour",
+            "quantity": 3,
+            "price": "100$",
+            "buyer": "username",
+            "date": "20-12-22"
+        },
+        {
+            "item": "sour",
+            "quantity": 3,
+            "price": "100$",
+            "buyer": "username",
+            "date": "20-12-22"
+        }
     ]
 }
