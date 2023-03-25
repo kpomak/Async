@@ -1,17 +1,8 @@
-"""
-2. Написать функцию host_range_ping() для перебора ip-адресов из заданного диапазона. Меняться должен только последний октет каждого адреса. По результатам проверки должно выводиться соответствующее сообщение.
-3. Написать функцию host_range_ping_tab(), возможности которой основаны на функции из примера 2. Но в данном случае результат должен быть итоговым по всем ip-адресам, представленным в табличном формате (использовать модуль tabulate). Таблица должна состоять из двух колонок и выглядеть примерно так:
-Reachable
-10.0.0.1
-10.0.0.2
-
-Unreachable
-10.0.0.3
-10.0.0.4
-"""
-from ipaddress import ip_address
 import os
+from ipaddress import ip_address
 from socket import gethostbyname
+
+from tabulate import tabulate
 
 
 class Ping:
@@ -34,7 +25,7 @@ class Ping:
         for ip_addr in hosts:
             if isinstance(ip_addr, (str, bytes, bytearray)):
                 ip_addr = self.translate(ip_addr)
-            response = os.system(f"ping -n 1 {ip_addr} > null")
+            response = os.system(f"ping -n 1 {ip_addr} > ping.log")
             if response == 0:
                 reachable.add(ip_addr)
             else:
@@ -64,16 +55,24 @@ class Ping:
 
         ip_addr = self.translate(start_ip)
         hosts = [ip_addr + i for i in range(stop - start)]
-        self.host_ping(hosts, output=output)
+        return self.host_ping(hosts, output=output)
+
+    def host_range_ping_tab(self, start_ip, stop_ip):
+        """
+        Результат выполнения host_range_ping() представляет в табличном формате.
+        Таблица состоит из двух Reachable, Unreachable:
+        """
+        print(tabulate(
+            self.host_range_ping(start_ip, stop_ip, output=False),
+            headers='keys',
+            tablefmt="pipe",
+            stralign="center",
+        ))
 
 
 if __name__ == '__main__':
     hosts = ['192.168.1.1', '192.168.1.3', 'yandex.ru', 'google.com']
     ping = Ping()
-    # ping.host_ping(hosts)
-    # ping.host_range_ping('192.168.1.1', '192.168.1.3')
-    # ipv4 = ip_address('192.168.1.2')
-    # print(ipv4.is_loopback)
-    # print(ipv4.is_multicast)
-    # print(ipv4.is_reserved)
-    # print(ipv4.is_private)
+    ping.host_ping(hosts)
+    ping.host_range_ping('5.255.255.70', '5.255.255.73')
+    ping.host_range_ping_tab('5.255.255.70', '5.255.255.73')
