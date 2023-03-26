@@ -19,17 +19,17 @@ class Ping:
 
         При этом ip-адрес сетевого узлa создаваться с помощью функции ip_address()
         """
-        reachable = set()
-        unreachable = set()
+        reachable = []
+        unreachable = []
 
         for ip_addr in hosts:
             if isinstance(ip_addr, (str, bytes, bytearray)):
                 ip_addr = self.translate(ip_addr)
             response = os.system(f"ping -n 1 {ip_addr} > ping.log")
             if response == 0:
-                reachable.add(ip_addr)
+                reachable.append(ip_addr)
             else:
-                unreachable.add(ip_addr)
+                unreachable.append(ip_addr)
 
         if output:
             for addr in reachable:
@@ -54,7 +54,7 @@ class Ping:
             return
 
         ip_addr = self.translate(start_ip)
-        hosts = [ip_addr + i for i in range(stop - start)]
+        hosts = [ip_addr + i for i in range(stop - start + 1)]
         return self.host_ping(hosts, output=output)
 
     def host_range_ping_tab(self, start_ip, stop_ip):
@@ -71,8 +71,45 @@ class Ping:
 
 
 if __name__ == '__main__':
-    hosts = ['192.168.1.1', '192.168.1.3', 'yandex.ru', 'google.com']
+    hosts = ['192.168.1.1', '192.168.0.3', 'yandex.ru', 'google.com']
     ping = Ping()
+
+    # Задача 1
     ping.host_ping(hosts)
-    ping.host_range_ping('5.255.255.70', '5.255.255.73')
-    ping.host_range_ping_tab('5.255.255.70', '5.255.255.73')
+    """
+    192.168.1.1 Узел доступен
+    192.168.0.3 Узел недоступен
+    5.255.255.70 Узел доступен
+    216.58.207.206 Узел доступен
+    """
+
+    # Задача 2
+    ping.host_range_ping('5.255.255.70', '5.255.255.80')
+    """
+    5.255.255.70 Узел доступен
+    5.255.255.77 Узел доступен
+    5.255.255.80 Узел доступен
+    5.255.255.71 Узел недоступен
+    5.255.255.72 Узел недоступен
+    5.255.255.73 Узел недоступен
+    5.255.255.74 Узел недоступен
+    5.255.255.75 Узел недоступен
+    5.255.255.76 Узел недоступен
+    5.255.255.78 Узел недоступен
+    5.255.255.79 Узел недоступен
+    """
+
+    # Задача 3
+    ping.host_range_ping_tab('5.255.255.70', '5.255.255.80')
+    """
+    |  reachable   |  unreachable  |
+    |:------------:|:-------------:|
+    | 5.255.255.70 | 5.255.255.71  |
+    | 5.255.255.77 | 5.255.255.72  |
+    | 5.255.255.80 | 5.255.255.73  |
+    |              | 5.255.255.74  |
+    |              | 5.255.255.75  |
+    |              | 5.255.255.76  |
+    |              | 5.255.255.78  |
+    |              | 5.255.255.79  |
+    """
